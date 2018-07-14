@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 
 	"html/template"
+
+	"github.com/BurntSushi/toml"
 )
 
 var jsonSchema = `{
@@ -19,6 +21,9 @@ var jsonSchema = `{
     "additionalProperties": false,
     "required": ["status"]
 }`
+
+const outFlags = os.O_WRONLY | os.O_CREATE | os.O_TRUNC
+const outMode = 0644
 
 func main() {
 	rootTpl, err := os.Open("./templates/root.tpl.html")
@@ -36,63 +41,78 @@ func main() {
 		panic(err)
 	}
 
-	rootOut, err := os.OpenFile("root.html", os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-	if err != nil {
-		panic(err)
-	}
+	// health := resource{
+	// 	Name: "Health",
+	// 	Routes: []route{
+	// 		route{
+	// 			Method:      http.MethodGet,
+	// 			Path:        "/health",
+	// 			Description: "Returns the health of the API.",
+	// 			Headers: []header{
+	// 				header{
+	// 					Key:    "Accept",
+	// 					Values: "application/json",
+	// 				},
+	// 			},
+	// 			Responses: []response{
+	// 				response{
+	// 					Status: status{Code: 200, Description: "Success"},
+	// 					Headers: []header{
+	// 						header{
+	// 							Key:    "Content-Type",
+	// 							Values: "application/json",
+	// 						},
+	// 					},
+	// 					Body: jsonSchema,
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// }
 
-	health := resource{
-		Name: "Health",
-		Routes: []route{
-			route{
-				Method:      http.MethodGet,
-				Path:        "/health",
-				Description: "Returns the health of the API.",
-				Headers: []header{
-					header{
-						Key:    "Accept",
-						Values: "application/json",
-					},
-				},
-				Responses: []response{
-					response{
-						Status: status{Code: 200, Description: "Success"},
-						Headers: []header{
-							header{
-								Key:    "Content-Type",
-								Values: "application/json",
-							},
-						},
-						Body: jsonSchema,
-					},
-				},
-			},
-		},
-	}
+	// cfg := config{
+	// 	AppName: "CoolApp",
+	// 	Resources: []resource{
+	// 		health,
+	// 	},
+	// 	CurrentResource: health,
+	// }
 
-	cfg := data{
-		AppName: "CoolApp",
-		Resources: []resource{
-			health,
-		},
-		CurrentResource: health,
-	}
+	appCfg := loadConfig()
+	for _, r := range appCfg.Resources {
+		filename := fmt.Sprintf("%v.html", r.Name)
+		out, err := os.OpenFile(filename, outFlags, outMode)
+		if err != nil {
+			panic(err)
+		}
 
-	err = t.Execute(rootOut, cfg)
-	if err != nil {
-		panic(err)
+		cfg := struct {
+			AppName         string
+			Resources       []resource
+			CurrentResource resource
+		}{
+			AppName:         appCfg.AppName,
+			Resources:       appCfg.Resources,
+			CurrentResource: r,
+		}
+
+		err = t.Execute(out, cfg)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
-type data struct {
+type config struct {
 	AppName         string
 	Resources       []resource
 	CurrentResource resource
 }
 
 type resource struct {
-	Name   string
-	Routes []route
+	AppName string
+	Name    string
+	Routes  []route
 }
 
 type route struct {
@@ -106,7 +126,7 @@ type route struct {
 
 type header struct {
 	Key    string
-	Values string
+	Values []string
 }
 
 type parameter struct {
@@ -115,12 +135,18 @@ type parameter struct {
 }
 
 type response struct {
-	Status  status
-	Headers []header
-	Body    string
+	Status      int
+	Description string
+	Headers     []header
+	Body        string
 }
 
-type status struct {
-	Code        int
-	Description string
+func loadConfig() config {
+	var cfg config
+	_, err := toml.DecodeFile("docky.toml", &cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	return cfg
 }
