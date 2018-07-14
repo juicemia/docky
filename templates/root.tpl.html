@@ -13,33 +13,40 @@
     <link rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
     
-    <link rel="stylesheet" href="app.css">
+    <!-- Putting this in here to avoid having to load any local files. -->
+    <style>
+    .container.base {
+        padding: 15px;
+    }
+    </style>
 
-    <title>App API</title>
+    <title>{{.AppName}} API Documentation</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a href="/" class="navbar-brand">App API</a>
+        <a href="/" class="navbar-brand">{{.AppName}} API</a>
 
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown">Resources</a>
 
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Users</a>
-                <a class="dropdown-item" href="#">Health</a>
+                {{range $index, $element := .Resources}}
+                <a class="dropdown-item" href="#">{{$element.Name}}</a>
+                {{end}}                
             </div>
         </div>
     </nav>
     
     <div class="base container">
+        {{range $index, $element := .CurrentResource.Routes}}
         <div class="row">
             <div class="col">
-                <h2>GET /health</h2>
+                <h2>{{$element.Method}} {{$element.Path}}</h2>
 
-                <p>Returns the health of the API.</p>
+                <p>{{$element.Description}}</p>
             </div>
         </div>
-
+        
         <div class="row">
             <div class="col"><h3>Request</h3></div>
         </div>
@@ -48,43 +55,48 @@
             <div class="col">
                 <h5>Headers</h5>
 
-                <pre><code>Accept: application/json</code></pre>
+                {{range $index, $element := $element.Headers}}
+                <pre><code>{{$element.Key}}: {{$element.Values}}</code></pre>
+                {{else}}
+                <p>None</p>
+                {{end}}
             </div>
 
             <div class="col">
                 <h5>Parameters</h5>
 
-                <pre>None</pre>
+                {{range $index, $element := $element.Parameters}}
+                <pre><code>{{$element.Key}}: {{$element.Type}}</code></pre>
+                {{else}}
+                <p>None</p>
+                {{end}}
             </div>
         </div>
 
+        {{range $index, $element := $element.Responses}}
         <div class="row">
-            <div class="col"><h3>200 - Success</h3></div>
+            <div class="col"><h3>{{$element.Status.Code}} - {{$element.Status.Description}}</h3></div>
         </div>
 
         <div class="row">
             <div class="col-6">
                 <h5>Headers</h5>
 
-                <pre><code>Content-Type: application/json</code></pre>
+                {{range $index, $element := $element.Headers}}
+                <pre><code>{{$element.Key}}: {{$element.Values}}</code></pre>
+                {{else}}
+                <p>None</p>
+                {{end}}
             </div>
 
             <div class="col-6">
                 <h5>Body</h5>
 
-<pre><code class="json">{
-    "type": "object",
-    "properties": {
-        "status": {
-            "type": "string",
-            "enum": ["UP", "DOWN", "UNKNOWN"]
-        }
-    },
-    "additionalProperties": false,
-    "required": ["status"]
-}</code></pre>
+                <pre><code class="json">{{$element.Body}}</code></pre>
             </div>
         </div>
+        {{end}}
+        {{end}}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -102,6 +114,9 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js">
         </script>
     
-    <script src="app.js"></script>
+    <!-- Putting this in here to avoid loading any local files. -->
+    <script type="">
+        hljs.initHighlightingOnLoad();
+    </script>
 </body>
 </html>
