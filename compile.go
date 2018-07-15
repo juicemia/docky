@@ -1,13 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
+
 	"html/template"
 
-	"github.com/BurntSushi/toml"
+	"github.com/ghodss/yaml"
 )
 
 var jsonSchema = `{
@@ -41,43 +44,6 @@ func main() {
 		panic(err)
 	}
 
-	// health := resource{
-	// 	Name: "Health",
-	// 	Routes: []route{
-	// 		route{
-	// 			Method:      http.MethodGet,
-	// 			Path:        "/health",
-	// 			Description: "Returns the health of the API.",
-	// 			Headers: []header{
-	// 				header{
-	// 					Key:    "Accept",
-	// 					Values: "application/json",
-	// 				},
-	// 			},
-	// 			Responses: []response{
-	// 				response{
-	// 					Status: status{Code: 200, Description: "Success"},
-	// 					Headers: []header{
-	// 						header{
-	// 							Key:    "Content-Type",
-	// 							Values: "application/json",
-	// 						},
-	// 					},
-	// 					Body: jsonSchema,
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// }
-
-	// cfg := config{
-	// 	AppName: "CoolApp",
-	// 	Resources: []resource{
-	// 		health,
-	// 	},
-	// 	CurrentResource: health,
-	// }
-
 	appCfg := loadConfig()
 	for _, r := range appCfg.Resources {
 		filename := fmt.Sprintf("%v.html", r.Name)
@@ -87,7 +53,7 @@ func main() {
 		}
 
 		cfg := struct {
-			AppName         string
+			AppName         string `yaml:"app_name"`
 			Resources       []resource
 			CurrentResource resource
 		}{
@@ -104,7 +70,7 @@ func main() {
 }
 
 type config struct {
-	AppName         string
+	AppName         string `json:"app_name"`
 	Resources       []resource
 	CurrentResource resource
 }
@@ -119,8 +85,8 @@ type route struct {
 	Method      string
 	Path        string
 	Description string
-	Headers     []header
-	Parameters  []parameter
+	Headers     map[string]string
+	Parameters  map[string]interface{}
 	Responses   []response
 }
 
@@ -137,16 +103,48 @@ type parameter struct {
 type response struct {
 	Status      int
 	Description string
-	Headers     []header
-	Body        string
+	Headers     map[string]string
+	Body        map[string]interface{}
+	BodySchema  string `yaml:"-"`
 }
 
 func loadConfig() config {
 	var cfg config
-	_, err := toml.DecodeFile("docky.toml", &cfg)
+	f, err := os.Open("docky.yaml")
 	if err != nil {
 		panic(err)
 	}
+
+	buf, err := ioutil.ReadAll(f)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("buf: %s\n", buf)
+
+	err = yaml.Unmarshal(buf, &cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, resource := range cfg.Resources {
+		for _, route := range resource.Routes {
+			for i := range route.Responses {
+				resp := route.Responses[i]
+				schema, err := json.MarshalIndent(resp.Body, "", "  ")
+				if err != nil {
+					panic(err)
+				}
+
+				resp.BodySchema = string(schema)
+
+				spew.Dump(resp)
+				route.Responses[i] = resp
+			}
+		}
+	}
+
+	spew.Dump(cfg)
 
 	return cfg
 }

@@ -55,8 +55,8 @@
             <div class="col">
                 <h5>Headers</h5>
 
-                {{range $index, $element := $element.Headers}}
-                <pre><code>{{$element.Key}}: {{$element.Values}}</code></pre>
+                {{range $key, $val := $element.Headers}}
+                <pre><code>{{$key}}: {{$val}}</code></pre>
                 {{else}}
                 <p>None</p>
                 {{end}}
@@ -65,8 +65,8 @@
             <div class="col">
                 <h5>Parameters</h5>
 
-                {{range $index, $element := $element.Parameters}}
-                <pre><code>{{$element.Key}}: {{$element.Type}}</code></pre>
+                {{range $key, $val := $element.Parameters}}
+                <pre><code>{{$key}}: {{$val}}</code></pre>
                 {{else}}
                 <p>None</p>
                 {{end}}
@@ -82,8 +82,8 @@
             <div class="col-6">
                 <h5>Headers</h5>
 
-                {{range $index, $element := $element.Headers}}
-                <pre><code>{{$element.Key}}: {{$element.Values}}</code></pre>
+                {{range $key, $val := $element.Headers}}
+                <pre><code>{{$key}}: {{$val}}</code></pre>
                 {{else}}
                 <p>None</p>
                 {{end}}
@@ -92,7 +92,7 @@
             <div class="col-6">
                 <h5>Body</h5>
 
-                <pre><code class="json">{{$element.Body}}</code></pre>
+                <pre><code class="json">{{$element.BodySchema}}</code></pre>
             </div>
         </div>
         {{end}}

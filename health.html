@@ -20,11 +20,11 @@
     }
     </style>
 
-    <title> API Documentation</title>
+    <title>MyApp API Documentation</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a href="/" class="navbar-brand"> API</a>
+        <a href="/" class="navbar-brand">MyApp API</a>
 
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-toggle="dropdown">Resources</a>
@@ -56,7 +56,7 @@
                 <h5>Headers</h5>
 
                 
-                <pre><code>Accept: [applicaton/json]</code></pre>
+                <pre><code>Accept: application/json</code></pre>
                 
             </div>
 
@@ -79,14 +79,26 @@
                 <h5>Headers</h5>
 
                 
-                <pre><code>Content-Type: [applicaton/json]</code></pre>
+                <pre><code>Content-Type: application/json</code></pre>
                 
             </div>
 
             <div class="col-6">
                 <h5>Body</h5>
 
-                <pre><code class="json"></code></pre>
+                <pre><code class="json">{
+  &#34;additional_properties&#34;: &#34;false,&#34;,
+  &#34;properties&#34;: {
+    &#34;status&#34;: {
+      &#34;enum&#34;: &#34;UP, DOWN, UNKNOWN&#34;,
+      &#34;type&#34;: &#34;string&#34;
+    }
+  },
+  &#34;required&#34;: [
+    &#34;status&#34;
+  ],
+  &#34;type&#34;: &#34;object&#34;
+}</code></pre>
             </div>
         </div>
         

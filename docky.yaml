@@ -1,0 +1,25 @@
+---
+app_name: MyApp
+
+resources:
+- name: health
+  routes:
+  - method: GET
+    path: /health
+    description: Returns the health of the API
+    headers:
+      Accept: application/json
+    responses:
+    - status: 200
+      description: Success
+      headers:
+        Content-Type: application/json
+      body:
+        type: object
+        properties:
+          status:
+            type: string
+            enum: UP, DOWN, UNKNOWN
+        additional_properties: false,
+        required:
+        - status
