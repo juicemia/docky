@@ -40,7 +40,7 @@ const root = `<!DOCTYPE html>
         </div>
     </nav>
     
-    {{ template "body" .Resource }}
+    {{ template "body" . }}
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -66,7 +66,7 @@ const root = `<!DOCTYPE html>
 
 const route = `{{ define "body" }}
 <div class="base container">
-    {{range $index, $element := .Routes}}
+    {{range $index, $element := .Resource.Routes}}
     <div class="row">
         <div class="col">
             <h2>{{$element.Method}} {{$element.Path}}</h2>
@@ -74,7 +74,7 @@ const route = `{{ define "body" }}
             <p>{{$element.Description}}</p>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col"><h3>Request</h3></div>
     </div>
@@ -121,6 +121,32 @@ const route = `{{ define "body" }}
             <h5>Body</h5>
 
             <pre><code class="json">{{$element.BodyJSON}}</code></pre>
+        </div>
+    </div>
+    {{end}}
+    {{end}}
+</div>
+{{ end }}`
+
+const index = `{{ define "body" }}
+<div class="base container">
+    {{range $index, $element := .Resources}}
+    <div class="row">
+        <div class="col">
+            <h2><a href="#" class="text-body"><u>{{$element.Name}}</u></a></h2>
+
+            <p>{{$element.Description}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col"><h3>Routes</h3></div>
+    </div>
+
+    {{range $index, $element := $element.Routes}}
+    <div class="row">
+        <div class="col">
+            <p><a href="#" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
         </div>
     </div>
     {{end}}

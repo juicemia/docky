@@ -4,7 +4,8 @@ app_name: MyApp
 output_folder: public/docs
 
 resources:
-- name: health
+- name: Health
+  description: Allows users to see the health of the application.
   routes:
   - method: GET
     path: /health

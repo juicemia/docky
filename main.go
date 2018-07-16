@@ -30,7 +30,23 @@ func main() {
 		}
 	}
 
-	t, err := template.New("out").Parse(root + route)
+	itpl, err := template.New("index").Parse(root + index)
+	if err != nil {
+		panic(err)
+	}
+
+	filename := fmt.Sprintf("%v/index.html", app.OutputFolder)
+	out, err := os.OpenFile(filename, outFlags, outMode)
+	if err != nil {
+		panic(err)
+	}
+
+	err = itpl.Execute(out, Page{AppName: app.Name, Resources: app.Resources})
+	if err != nil {
+		panic(err)
+	}
+
+	t, err := template.New("route").Parse(root + route)
 	if err != nil {
 		panic(err)
 	}

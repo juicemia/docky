@@ -3,7 +3,8 @@ namespace :templates do
     template_vars = {
       templates: {
         root: File.read('./templates/root.tpl.html'),
-        route: File.read('./templates/routes.tpl.html')
+        route: File.read('./templates/routes.tpl.html'),
+        index: File.read('./templates/index.tpl.html')
       }
     }
 

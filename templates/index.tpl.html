@@ -1,0 +1,25 @@
+{{ define "body" }}
+<div class="base container">
+    {{range $index, $element := .Resources}}
+    <div class="row">
+        <div class="col">
+            <h2><a href="#" class="text-body"><u>{{$element.Name}}</u></a></h2>
+
+            <p>{{$element.Description}}</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col"><h3>Routes</h3></div>
+    </div>
+
+    {{range $index, $element := $element.Routes}}
+    <div class="row">
+        <div class="col">
+            <p><a href="#" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
+        </div>
+    </div>
+    {{end}}
+    {{end}}
+</div>
+{{ end }}

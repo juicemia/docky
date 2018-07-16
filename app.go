@@ -26,9 +26,10 @@ type Page struct {
 
 // Resource is a logical grouping of endpoints.
 type Resource struct {
-	Name     string
-	Routes   []Route
-	Template *template.Template
+	Name        string
+	Description string
+	Routes      []Route
+	Template    *template.Template
 }
 
 // Route is an individual endpoint that can be interacted with.
