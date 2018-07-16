@@ -20,7 +20,7 @@ func main() {
 		panic(err)
 	}
 
-	t, err := template.ParseFiles(templates...)
+	t, err := template.New("out").Parse(root + route)
 	if err != nil {
 		panic(err)
 	}
