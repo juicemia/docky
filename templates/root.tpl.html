@@ -31,7 +31,7 @@
 
             <div class="dropdown-menu">
                 {{range $index, $element := .Resources}}
-                <a class="dropdown-item" href="#">{{$element.Name}}</a>
+                <a class="dropdown-item" href="./{{$element.GetLinkName}}.html">{{$element.Name}}</a>
                 {{end}}                
             </div>
         </div>

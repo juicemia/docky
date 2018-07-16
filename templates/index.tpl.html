@@ -1,9 +1,10 @@
 {{ define "body" }}
 <div class="base container">
     {{range $index, $element := .Resources}}
+    {{$baseLinkName := $element.GetLinkName}}
     <div class="row">
         <div class="col">
-            <h2><a href="#" class="text-body"><u>{{$element.Name}}</u></a></h2>
+            <h2><a href="./{{$baseLinkName}}.html" class="text-body"><u>{{$element.Name}}</u></a></h2>
 
             <p>{{$element.Description}}</p>
         </div>
@@ -16,7 +17,7 @@
     {{range $index, $element := $element.Routes}}
     <div class="row">
         <div class="col">
-            <p><a href="#" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
+            <p><a href="./{{$baseLinkName}}.html#{{$element.GetLinkName}}" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
         </div>
     </div>
     {{end}}

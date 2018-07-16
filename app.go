@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"html/template"
 
@@ -88,4 +90,19 @@ func LoadApp() (App, error) {
 	}
 
 	return cfg, nil
+}
+
+func (r Resource) GetLinkName() string {
+	return strings.ToLower(r.Name)
+}
+
+func (r Route) GetLinkName() string {
+	method := strings.ToLower(r.Method)
+	path := ""
+
+	for _, seg := range strings.Split(r.Path, "/")[1:] {
+		path += seg + "-"
+	}
+
+	return fmt.Sprintf("%v-%v", method, path[:len(path)-1])
 }

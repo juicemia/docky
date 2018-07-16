@@ -34,7 +34,7 @@ const root = `<!DOCTYPE html>
 
             <div class="dropdown-menu">
                 {{range $index, $element := .Resources}}
-                <a class="dropdown-item" href="#">{{$element.Name}}</a>
+                <a class="dropdown-item" href="./{{$element.GetLinkName}}.html">{{$element.Name}}</a>
                 {{end}}                
             </div>
         </div>
@@ -69,7 +69,7 @@ const route = `{{ define "body" }}
     {{range $index, $element := .Resource.Routes}}
     <div class="row">
         <div class="col">
-            <h2>{{$element.Method}} {{$element.Path}}</h2>
+            <a name="{{$element.GetLinkName}}"><h2 id="{{$element.GetLinkName}}">{{$element.Method}} {{$element.Path}}</h2></a>
 
             <p>{{$element.Description}}</p>
         </div>
@@ -131,9 +131,10 @@ const route = `{{ define "body" }}
 const index = `{{ define "body" }}
 <div class="base container">
     {{range $index, $element := .Resources}}
+    {{$baseLinkName := $element.GetLinkName}}
     <div class="row">
         <div class="col">
-            <h2><a href="#" class="text-body"><u>{{$element.Name}}</u></a></h2>
+            <h2><a href="./{{$baseLinkName}}.html" class="text-body"><u>{{$element.Name}}</u></a></h2>
 
             <p>{{$element.Description}}</p>
         </div>
@@ -146,7 +147,7 @@ const index = `{{ define "body" }}
     {{range $index, $element := $element.Routes}}
     <div class="row">
         <div class="col">
-            <p><a href="#" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
+            <p><a href="./{{$baseLinkName}}.html#{{$element.GetLinkName}}" class="text-body"><u>{{$element.Method}} {{$element.Path}}</u></a></p>
         </div>
     </div>
     {{end}}
