@@ -1,0 +1,5 @@
+package main
+
+<% templates.each do |name, content | %>
+const <%= name %> = `<%= content %>`
+<% end %>
