@@ -1,6 +1,8 @@
 ---
 app_name: MyApp
 
+output_folder: public/docs
+
 resources:
 - name: health
   routes:

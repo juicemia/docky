@@ -12,8 +12,9 @@ import (
 
 // App is the top level definition of the application being documented.
 type App struct {
-	Name      string `json:"app_name"`
-	Resources []Resource
+	Name         string `json:"app_name"`
+	OutputFolder string `json:"output_folder"`
+	Resources    []Resource
 }
 
 // Page is an individual page that's generated.
