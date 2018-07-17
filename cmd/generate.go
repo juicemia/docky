@@ -10,14 +10,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newGenerateCmd(app config.App) *cobra.Command {
+func newGenerateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "generate",
 		Short: "Generate API documentation",
 		Long: `Generates a static site for API documentation using "docky.yaml" for
 	the application definition.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			err := runGenerate(app)
+			app, err := config.LoadApp()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			err = runGenerate(app)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)

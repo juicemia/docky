@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/juicemia/docky/config"
 	"github.com/spf13/cobra"
 )
 
@@ -23,11 +22,7 @@ func Execute() {
 }
 
 func init() {
-	app, err := config.LoadApp()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 
-	rootCmd.AddCommand(newGenerateCmd(app))
+	rootCmd.AddCommand(newGenerateCmd())
+	rootCmd.AddCommand(newInitCmd())
 }
