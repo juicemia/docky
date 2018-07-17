@@ -1,5 +1,4 @@
-package main
-
+package cmd
 
 const root = `<!DOCTYPE html>
 <html lang="en">

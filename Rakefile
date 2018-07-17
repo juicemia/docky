@@ -9,7 +9,7 @@ namespace :templates do
     }
 
     src = File.join Dir.pwd, 'templates.go.erb'
-    dst = File.join Dir.pwd, 'templates.go'
+    dst = File.join Dir.pwd, 'cmd/templates.go'
     execute_and_write_template src, template_vars, dst
   end
 
